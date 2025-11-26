@@ -15,42 +15,50 @@ import Layout from "../components/Layout.astro";
       <!-- Game -->
       <div class="max-w-2xl mx-auto mb-4">
         <div class="bg-gray-800/50 border border-gray-700 rounded-lg p-6 relative">
-          <div class="mb-4 flex justify-between items-center flex-wrap gap-2">
-            <p class="text-sm text-gray-400">
-              <span class="hidden md:inline">Press <kbd class="px-2 py-1 bg-gray-700 rounded">SPACE</kbd></span>
-              <span class="md:hidden">Tap screen</span> to jump
+          <div class="mb-4 flex justify-between items-center text-xs md:text-sm flex-wrap gap-2">
+            <p class="text-gray-400">
+              <span class="hidden md:inline">Press <kbd class="px-2 py-1 bg-gray-700 rounded text-xs">SPACE</kbd></span>
+              <span class="md:hidden">Tap</span> to jump
             </p>
-            <p class="text-sm text-gray-400">Score: <span id="score">0</span> | High: <span id="highScore">0</span></p>
+            <div class="flex gap-3 text-gray-400">
+              <span>Score: <span id="score" class="text-white font-semibold">0</span></span>
+              <span>🐟 <span id="fishCount" class="text-blue-300 font-semibold">0</span></span>
+              <span>⭐ <span id="starCount" class="text-yellow-300 font-semibold">0</span></span>
+            </div>
           </div>
           <div class="relative">
             <canvas id="gameCanvas" width="600" height="200" class="w-full bg-gray-900 rounded cursor-pointer touch-none select-none"></canvas>
             
             <!-- Instructions Overlay -->
             <div id="instructions" class="absolute inset-0 bg-gray-900/95 rounded flex items-center justify-center cursor-pointer">
-              <div class="text-center px-4 md:px-8">
-                <h3 class="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-blue-400">How to Play</h3>
-                <div class="space-y-2 md:space-y-4 text-left max-w-sm mx-auto mb-4 md:mb-6 text-sm md:text-base">
-                  <div class="flex items-center gap-3">
-                    <span class="text-3xl">🐧</span>
-                    <span class="text-gray-300">You're the penguin</span>
+              <div class="text-center px-3 md:px-6 py-2">
+                <h3 class="text-lg md:text-xl font-bold mb-3 text-blue-400">How to Play</h3>
+                <div class="space-y-1.5 md:space-y-2 text-left max-w-xs mx-auto mb-3 text-xs md:text-sm">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl md:text-2xl">🐧</span>
+                    <span class="text-gray-300 text-xs md:text-sm">You're the penguin</span>
                   </div>
-                  <div class="flex items-center gap-3">
-                    <span class="text-3xl">🐻‍❄️</span>
-                    <span class="text-gray-300">Avoid the polar bears</span>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl md:text-2xl">🐻‍❄️</span>
+                    <span class="text-gray-300 text-xs md:text-sm">Avoid polar bears</span>
                   </div>
-                  <div class="flex items-center gap-3">
-                    <span class="text-3xl">🐟</span>
-                    <span class="text-gray-300">Collect fish for super jump</span>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl md:text-2xl">🐟</span>
+                    <span class="text-gray-300 text-xs md:text-sm">Fish = super jump</span>
                   </div>
-                  <div class="flex items-center gap-3">
-                    <kbd class="px-3 py-1 bg-gray-700 rounded text-sm hidden md:inline-block">SPACE</kbd>
-                    <span class="md:hidden text-2xl">👆</span>
-                    <span class="text-gray-300"><span class="hidden md:inline">Press SPACE</span><span class="md:hidden">Tap</span> to jump</span>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl md:text-2xl">⭐</span>
+                    <span class="text-gray-300 text-xs md:text-sm">Stars = +5 points</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <kbd class="px-2 py-0.5 bg-gray-700 rounded text-xs hidden md:inline-block">SPACE</kbd>
+                    <span class="md:hidden text-xl">👆</span>
+                    <span class="text-gray-300 text-xs md:text-sm"><span class="hidden md:inline">SPACE</span><span class="md:hidden">Tap</span> to jump</span>
                   </div>
                 </div>
-                <p class="text-blue-400 animate-pulse">
+                <p class="text-blue-400 animate-pulse text-xs md:text-sm">
                   <span class="hidden md:inline">Press SPACE</span>
-                  <span class="md:hidden">Tap anywhere</span> to start!
+                  <span class="md:hidden">Tap</span> to start!
                 </p>
               </div>
             </div>
@@ -118,9 +126,12 @@ import Layout from "../components/Layout.astro";
   const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
   const ctx = canvas.getContext('2d')!;
   const scoreEl = document.getElementById('score')!;
+  const fishCountEl = document.getElementById('fishCount')!;
+  const starCountEl = document.getElementById('starCount')!;
   const highScoreEl = document.getElementById('highScore')!;
   const gameOverEl = document.getElementById('gameOver')!;
   const instructionsEl = document.getElementById('instructions')!;
+  const gameOverCTA = document.getElementById('gameOverCTA')!;
 
   // Load high score from localStorage
   let highScore = parseInt(localStorage.getItem('penguinHighScore') || '0');
@@ -128,6 +139,8 @@ import Layout from "../components/Layout.astro";
 
   // Game state
   let score = 0;
+  let fishCollected = 0;
+  let starsCollected = 0;
   let gameOver = false;
   let gameStarted = false;
 
@@ -144,8 +157,11 @@ import Layout from "../components/Layout.astro";
   // Game objects
   let obstacles: Array<{ x: number; width: number; height: number }> = [];
   let powerUps: Array<{ x: number; y: number; width: number; height: number }> = [];
+  let platforms: Array<{ x: number; y: number; width: number; height: number }> = [];
+  let stars: Array<{ x: number; y: number; width: number; height: number }> = [];
   let frameCount = 0;
-  const gravity = 0.5;
+  let nextObstacleFrame = 150; // Random spawn timing
+  const gravity = 0.35; // Reduced from 0.5 for smoother falling
   let jumpPower = -10;
   const normalJumpPower = -10;
   const superJumpPower = -14;
@@ -207,19 +223,28 @@ import Layout from "../components/Layout.astro";
 
   function resetGame() {
     score = 0;
+    fishCollected = 0;
+    starsCollected = 0;
     gameOver = false;
     gameStarted = true;
     obstacles = [];
     powerUps = [];
+    platforms = [];
+    stars = [];
     player.y = groundY - player.height;
     player.velocityY = 0;
     player.jumping = false;
     frameCount = 0;
+    nextObstacleFrame = 150;
     powerUpActive = false;
     powerUpTimer = 0;
     jumpPower = normalJumpPower;
+    scoreEl.textContent = '0';
+    fishCountEl.textContent = '0';
+    starCountEl.textContent = '0';
     gameOverEl.classList.add('hidden');
     instructionsEl.classList.add('hidden');
+    gameOverCTA.classList.add('hidden');
     gameLoop();
   }
 
@@ -241,22 +266,46 @@ import Layout from "../components/Layout.astro";
     // Draw player (penguin)
     drawPenguin(player.x, player.y);
 
-    // Spawn obstacles and power-ups
+    // Spawn obstacles and power-ups with random timing
     frameCount++;
-    if (frameCount % 90 === 0) {
+    
+    // Random obstacle spawning
+    if (frameCount >= nextObstacleFrame) {
       obstacles.push({
         x: canvas.width,
         width: 35,
         height: 30
       });
+      nextObstacleFrame = frameCount + Math.floor(Math.random() * 100 + 100); // 100-200 frames
     }
     
-    if (frameCount % 200 === 0) {
+    // Spawn fish occasionally
+    if (frameCount % 250 === 0) {
       powerUps.push({
         x: canvas.width,
         y: groundY - 80,
         width: 20,
         height: 15
+      });
+    }
+    
+    // Spawn platforms every so often
+    if (frameCount % 300 === 0 && Math.random() > 0.5) {
+      platforms.push({
+        x: canvas.width,
+        y: groundY - 60,
+        width: 80,
+        height: 10
+      });
+    }
+    
+    // Spawn stars after score reaches 10
+    if (score >= 10 && frameCount % 350 === 0) {
+      stars.push({
+        x: canvas.width,
+        y: groundY - 100,
+        width: 20,
+        height: 20
       });
     }
     
@@ -313,10 +362,69 @@ import Layout from "../components/Layout.astro";
         powerUpActive = true;
         powerUpTimer = 180;
         jumpPower = superJumpPower;
+        fishCollected++;
+        fishCountEl.textContent = fishCollected.toString();
         return false;
       }
       
       return fish.x > -fish.width;
+    });
+
+    // Update and draw platforms
+    platforms = platforms.filter(plat => {
+      plat.x -= 2;
+      
+      // Draw ice platform with gradient
+      const gradient = ctx.createLinearGradient(plat.x, plat.y, plat.x, plat.y + plat.height);
+      gradient.addColorStop(0, '#e0f2fe'); // light blue
+      gradient.addColorStop(0.5, '#bae6fd'); // lighter blue
+      gradient.addColorStop(1, '#7dd3fc'); // sky blue
+      ctx.fillStyle = gradient;
+      ctx.fillRect(plat.x, plat.y, plat.width, plat.height);
+      
+      // Add sparkle effect
+      ctx.strokeStyle = '#f0f9ff';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(plat.x, plat.y, plat.width, plat.height);
+      
+      // Platform collision (landing on top)
+      if (
+        player.x < plat.x + plat.width &&
+        player.x + player.width > plat.x &&
+        player.y + player.height >= plat.y &&
+        player.y + player.height <= plat.y + plat.height + 5 &&
+        player.velocityY >= 0
+      ) {
+        player.y = plat.y - player.height;
+        player.velocityY = 0;
+        player.jumping = false;
+      }
+      
+      return plat.x > -plat.width;
+    });
+
+    // Update and draw stars
+    stars = stars.filter(star => {
+      star.x -= 2;
+      
+      // Draw star
+      drawStar(star.x + star.width / 2, star.y + star.height / 2, 10);
+      
+      // Collision detection for star collection
+      if (
+        player.x < star.x + star.width &&
+        player.x + player.width > star.x &&
+        player.y < star.y + star.height &&
+        player.y + player.height > star.y
+      ) {
+        starsCollected++;
+        starCountEl.textContent = starsCollected.toString();
+        score += 5; // Bonus points for stars
+        scoreEl.textContent = score.toString();
+        return false;
+      }
+      
+      return star.x > -star.width;
     });
 
     // Draw ground line
@@ -441,5 +549,37 @@ import Layout from "../components/Layout.astro";
   ctx.moveTo(0, groundY);
   ctx.lineTo(canvas.width, groundY);
   ctx.stroke();
+
+  // Draw star helper function
+  function drawStar(cx: number, cy: number, radius: number) {
+    const spikes = 5;
+    const outerRadius = radius;
+    const innerRadius = radius / 2;
+    let rot = Math.PI / 2 * 3;
+    const step = Math.PI / spikes;
+    
+    ctx.fillStyle = '#fbbf24';
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - outerRadius);
+    
+    for (let i = 0; i < spikes; i++) {
+      let x = cx + Math.cos(rot) * outerRadius;
+      let y = cy + Math.sin(rot) * outerRadius;
+      ctx.lineTo(x, y);
+      rot += step;
+      
+      x = cx + Math.cos(rot) * innerRadius;
+      y = cy + Math.sin(rot) * innerRadius;
+      ctx.lineTo(x, y);
+      rot += step;
+    }
+    
+    ctx.lineTo(cx, cy - outerRadius);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
 </script>
 
