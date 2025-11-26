@@ -20,6 +20,13 @@ const outputPath = path.join(__dirname, '../src/data/resume.json');
 
 console.log('📄 Parsing LaTeX resume...\n');
 
+// Ensure the output directory exists
+const outputDir = path.dirname(outputPath);
+if (!fs.existsSync(outputDir)) {
+  console.log('📁 Creating src/data/ directory...\n');
+  fs.mkdirSync(outputDir, { recursive: true });
+}
+
 try {
   const latexContent = fs.readFileSync(latexPath, 'utf-8');
   
