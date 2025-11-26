@@ -1,0 +1,89 @@
+---
+import Navbar from "./Navbar.astro";
+import Footer from "./Footer.astro";
+import "../styles/global.css";
+
+const { title = "Joe Charland - Software Engineer" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Joe Charland's software engineering portfolio - Computing Systems & AI focus" />
+    <title>{title}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </head>
+  <body class="bg-gray-900 text-white font-sans min-h-screen flex flex-col">
+    <div class="cursor-spotlight"></div>
+    <Navbar />
+    <main class="max-w-4xl mx-auto p-6 flex-grow w-full relative z-10">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style is:global>
+  /* Cursor spotlight effect */
+  .cursor-spotlight {
+    position: fixed;
+    width: 900px;
+    height: 900px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    background: radial-gradient(
+      circle,
+      rgba(59, 130, 246, 0.15) 0%,
+      rgba(59, 130, 246, 0.08) 25%,
+      transparent 50%
+    );
+    transform: translate(-50%, -50%);
+  }
+</style>
+
+<script>
+  // Cursor spotlight effect
+  const spotlight = document.querySelector('.cursor-spotlight') as HTMLElement;
+  
+  let mouseX = 0;
+  let mouseY = 0;
+  let currentX = 0;
+  let currentY = 0;
+  
+  // Track mouse movement
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    
+    if (spotlight) {
+      spotlight.style.opacity = '1';
+    }
+  });
+
+  // Smooth animation loop with easing
+  function animate() {
+    // Ease towards mouse position for smooth movement
+    currentX += (mouseX - currentX) * 0.15;
+    currentY += (mouseY - currentY) * 0.15;
+    
+    if (spotlight) {
+      spotlight.style.left = `${currentX}px`;
+      spotlight.style.top = `${currentY}px`;
+    }
+    
+    requestAnimationFrame(animate);
+  }
+  
+  animate();
+
+  // Hide spotlight when mouse leaves window
+  document.addEventListener('mouseleave', () => {
+    if (spotlight) {
+      spotlight.style.opacity = '0';
+    }
+  });
+</script>

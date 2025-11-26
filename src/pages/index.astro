@@ -1,11 +1,96 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "../components/Layout.astro";
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Joe Charland - Full Stack Software Engineer">
+  <section class="hero-section text-center py-20 md:py-32">
+    <h1 class="text-4xl md:text-5xl font-bold mb-4 animate-fade-in">
+      Hello, I'm <span class="name-highlight">Joe Charland</span>
+    </h1>
+    <p class="text-lg md:text-xl text-gray-300 mb-4 animate-fade-in-delay">
+      Full Stack Software Engineer @ <span class="font-semibold text-white">BNY</span>
+    </p>
+    <p class="text-base text-gray-400 mb-8 animate-fade-in-delay">
+      M.S. in Computer Science (Georgia Tech) · Specializing in Computing Systems & AI
+    </p>
+    <p class="text-base md:text-lg text-gray-400 max-w-2xl mx-auto mb-12 animate-fade-in-delay">
+      Building mission-critical financial applications with modern web technologies.
+      Focused on system optimization, CI/CD automation, and scalable architecture.
+    </p>
+    <div class="flex gap-4 justify-center flex-wrap animate-fade-in-delay">
+      <a href="/projects" 
+         class="btn-pulse bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg font-semibold transition-all duration-300">
+        View Projects
+      </a>
+      <a href="/about" 
+         class="border border-blue-600 hover:bg-blue-600/10 px-6 py-3 rounded-lg font-semibold transition-all duration-300">
+        About Me
+      </a>
+      <a href="/resume" 
+         class="border border-gray-600 hover:bg-gray-700 px-6 py-3 rounded-lg font-semibold transition-all duration-300">
+        Resume
+      </a>
+    </div>
+  </section>
 </Layout>
+
+<style>
+  /* Simple fade-in animation */
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out;
+  }
+
+  .animate-fade-in-delay {
+    animation: fadeIn 1s ease-out 0.3s both;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Name highlight with subtle glow */
+  .name-highlight {
+    color: rgb(96 165 250);
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .name-highlight:hover {
+    color: rgb(147 197 253);
+    text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+    transform: scale(1.05);
+  }
+
+  /* Subtle pulse on primary button */
+  .btn-pulse {
+    position: relative;
+  }
+
+  .btn-pulse::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 0.5rem;
+    background: rgb(37 99 235);
+    opacity: 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.3;
+      transform: scale(1.05);
+    }
+  }
+</style>

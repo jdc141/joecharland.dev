@@ -1,0 +1,403 @@
+---
+import Layout from "../components/Layout.astro";
+---
+
+<Layout title="Arctic Adventure - Joe Charland">
+  <section class="text-center py-8">
+    <div class="animate-fade-in">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 gradient-text">
+        Arctic Adventure 🐧
+      </h1>
+      <p class="text-gray-400 mb-6">
+        A mini penguin jumping game!
+      </p>
+      
+      <!-- Game -->
+      <div class="max-w-2xl mx-auto mb-4">
+        <div class="bg-gray-800/50 border border-gray-700 rounded-lg p-6 relative">
+          <div class="mb-4 flex justify-between items-center">
+            <p class="text-sm text-gray-400">Press <kbd class="px-2 py-1 bg-gray-700 rounded">SPACE</kbd> to jump</p>
+            <p class="text-sm text-gray-400">Score: <span id="score">0</span> | High: <span id="highScore">0</span></p>
+          </div>
+          <div class="relative">
+            <canvas id="gameCanvas" width="600" height="200" class="w-full bg-gray-900 rounded"></canvas>
+            
+            <!-- Instructions Overlay -->
+            <div id="instructions" class="absolute inset-0 bg-gray-900/95 rounded flex items-center justify-center">
+              <div class="text-center px-8">
+                <h3 class="text-2xl font-bold mb-6 text-blue-400">How to Play</h3>
+                <div class="space-y-4 text-left max-w-sm mx-auto mb-6">
+                  <div class="flex items-center gap-3">
+                    <span class="text-3xl">🐧</span>
+                    <span class="text-gray-300">You're the penguin</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="text-3xl">🐻‍❄️</span>
+                    <span class="text-gray-300">Avoid the polar bears</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="text-3xl">🐟</span>
+                    <span class="text-gray-300">Collect fish for super jump</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <kbd class="px-3 py-1 bg-gray-700 rounded text-sm">SPACE</kbd>
+                    <span class="text-gray-300">Jump</span>
+                  </div>
+                </div>
+                <p class="text-blue-400 animate-pulse">Press SPACE to start!</p>
+              </div>
+            </div>
+          </div>
+          <div id="gameOver" class="mt-4 hidden">
+            <p class="text-sm text-red-400 mb-4">Game Over! Press SPACE to restart</p>
+            <div class="bg-blue-600/10 border border-blue-500/30 rounded-lg p-4 mt-4">
+              <p class="text-gray-300 mb-3">
+                Seems like you're enjoying this game... 🤔
+              </p>
+              <p class="text-gray-300 mb-4">
+                Maybe you'd enjoy <strong class="text-white">hiring me</strong> too?
+              </p>
+              <a href="/resume" 
+                 class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 text-sm">
+                <i class="fas fa-user-tie"></i>
+                View Resume
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-4 justify-center flex-wrap mt-2">
+        <a href="/" 
+           class="border border-gray-600 hover:bg-gray-700 px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+          <i class="fas fa-home mr-2"></i>
+          Back Home
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .gradient-text {
+    background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-flow 4s linear infinite;
+  }
+
+  @keyframes gradient-flow {
+    to { background-position: 200% center; }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  kbd {
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+</style>
+
+<script>
+  const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+  const scoreEl = document.getElementById('score')!;
+  const highScoreEl = document.getElementById('highScore')!;
+  const gameOverEl = document.getElementById('gameOver')!;
+  const instructionsEl = document.getElementById('instructions')!;
+
+  // Load high score from localStorage
+  let highScore = parseInt(localStorage.getItem('penguinHighScore') || '0');
+  highScoreEl.textContent = highScore.toString();
+
+  // Game state
+  let score = 0;
+  let gameOver = false;
+  let gameStarted = false;
+
+  // Player (penguin character)
+  const player = {
+    x: 50,
+    y: 150,
+    width: 30,
+    height: 35,
+    velocityY: 0,
+    jumping: false
+  };
+
+  // Game objects
+  let obstacles: Array<{ x: number; width: number; height: number }> = [];
+  let powerUps: Array<{ x: number; y: number; width: number; height: number }> = [];
+  let frameCount = 0;
+  const gravity = 0.5;
+  let jumpPower = -10;
+  const normalJumpPower = -10;
+  const superJumpPower = -14;
+  const groundY = 170;
+  let powerUpActive = false;
+  let powerUpTimer = 0;
+
+  // Controls
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (!gameStarted) {
+        instructionsEl.classList.add('hidden');
+        gameStarted = true;
+        gameLoop();
+      } else if (gameOver) {
+        resetGame();
+      } else if (!player.jumping) {
+        player.velocityY = jumpPower;
+        player.jumping = true;
+      }
+    }
+  });
+
+  function resetGame() {
+    score = 0;
+    gameOver = false;
+    gameStarted = true;
+    obstacles = [];
+    powerUps = [];
+    player.y = groundY - player.height;
+    player.velocityY = 0;
+    player.jumping = false;
+    frameCount = 0;
+    powerUpActive = false;
+    powerUpTimer = 0;
+    jumpPower = normalJumpPower;
+    gameOverEl.classList.add('hidden');
+    instructionsEl.classList.add('hidden');
+    gameLoop();
+  }
+
+  function gameLoop() {
+    if (gameOver || !gameStarted) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Update player
+    player.velocityY += gravity;
+    player.y += player.velocityY;
+
+    if (player.y >= groundY - player.height) {
+      player.y = groundY - player.height;
+      player.velocityY = 0;
+      player.jumping = false;
+    }
+
+    // Draw player (penguin)
+    drawPenguin(player.x, player.y);
+
+    // Spawn obstacles and power-ups
+    frameCount++;
+    if (frameCount % 90 === 0) {
+      obstacles.push({
+        x: canvas.width,
+        width: 35,
+        height: 30
+      });
+    }
+    
+    if (frameCount % 200 === 0) {
+      powerUps.push({
+        x: canvas.width,
+        y: groundY - 80,
+        width: 20,
+        height: 15
+      });
+    }
+    
+    if (powerUpActive) {
+      powerUpTimer--;
+      if (powerUpTimer <= 0) {
+        powerUpActive = false;
+        jumpPower = normalJumpPower;
+      }
+    }
+
+    // Update and draw obstacles (polar bears)
+    obstacles = obstacles.filter(obs => {
+      obs.x -= 3;
+      drawPolarBear(obs.x, groundY - obs.height);
+
+      if (
+        player.x < obs.x + obs.width - 5 &&
+        player.x + player.width > obs.x + 5 &&
+        player.y + player.height > groundY - obs.height + 5
+      ) {
+        gameOver = true;
+        gameOverEl.classList.remove('hidden');
+        
+        // Update high score
+        if (score > highScore) {
+          highScore = score;
+          highScoreEl.textContent = highScore.toString();
+          localStorage.setItem('penguinHighScore', highScore.toString());
+        }
+        return false;
+      }
+
+      if (obs.x + obs.width < 0) {
+        score++;
+        scoreEl.textContent = score.toString();
+        return false;
+      }
+
+      return obs.x > -obs.width;
+    });
+    
+    // Update and draw power-ups (fish)
+    powerUps = powerUps.filter(fish => {
+      fish.x -= 3;
+      drawFish(fish.x, fish.y);
+      
+      if (
+        player.x < fish.x + fish.width &&
+        player.x + player.width > fish.x &&
+        player.y < fish.y + fish.height &&
+        player.y + player.height > fish.y
+      ) {
+        powerUpActive = true;
+        powerUpTimer = 180;
+        jumpPower = superJumpPower;
+        return false;
+      }
+      
+      return fish.x > -fish.width;
+    });
+
+    // Draw ground line
+    ctx.strokeStyle = '#4b5563';
+    ctx.beginPath();
+    ctx.moveTo(0, groundY);
+    ctx.lineTo(canvas.width, groundY);
+    ctx.stroke();
+
+    if (!gameOver) {
+      requestAnimationFrame(gameLoop);
+    }
+  }
+
+  // Draw functions (same as 404 page)
+  function drawPolarBear(x: number, y: number) {
+    ctx.fillStyle = '#f3f4f6';
+    ctx.beginPath();
+    ctx.ellipse(x + 17, y + 18, 15, 12, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x + 17, y + 8, 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x + 11, y + 3, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x + 23, y + 3, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.arc(x + 14, y + 7, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x + 20, y + 7, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x + 17, y + 11, 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#f3f4f6';
+    ctx.fillRect(x + 8, y + 25, 6, 5);
+    ctx.fillRect(x + 20, y + 25, 6, 5);
+  }
+  
+  function drawFish(x: number, y: number) {
+    ctx.fillStyle = '#fb923c';
+    ctx.beginPath();
+    ctx.ellipse(x + 10, y + 7, 8, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(x + 2, y + 7);
+    ctx.lineTo(x, y + 3);
+    ctx.lineTo(x, y + 11);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(x + 14, y + 6, 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.arc(x + 14, y + 6, 1, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawPenguin(x: number, y: number) {
+    const centerX = x + player.width / 2;
+    ctx.fillStyle = '#1f2937';
+    ctx.beginPath();
+    ctx.ellipse(centerX, y + 20, 12, 15, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.ellipse(centerX, y + 22, 8, 12, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#1f2937';
+    ctx.beginPath();
+    ctx.arc(centerX, y + 8, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(centerX - 3, y + 7, 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(centerX + 3, y + 7, 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.arc(centerX - 3, y + 7, 1, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(centerX + 3, y + 7, 1, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#f97316';
+    ctx.beginPath();
+    ctx.moveTo(centerX, y + 10);
+    ctx.lineTo(centerX - 3, y + 12);
+    ctx.lineTo(centerX + 3, y + 12);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#f97316';
+    ctx.beginPath();
+    ctx.ellipse(centerX - 5, y + 34, 3, 2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(centerX + 5, y + 34, 3, 2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#1f2937';
+    ctx.beginPath();
+    ctx.ellipse(centerX - 11, y + 18, 3, 8, -0.3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(centerX + 11, y + 18, 3, 8, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Initial draw
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawPenguin(player.x, groundY - player.height);
+  ctx.strokeStyle = '#4b5563';
+  ctx.beginPath();
+  ctx.moveTo(0, groundY);
+  ctx.lineTo(canvas.width, groundY);
+  ctx.stroke();
+</script>
+

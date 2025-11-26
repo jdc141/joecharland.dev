@@ -1,0 +1,153 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage{ragged2e}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+% =============================
+%       STYLE SETTINGS
+% =============================
+\titleformat{\section}
+  {\large\bfseries\uppercase}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{1.2ex}{0.6ex}
+\setlength{\parskip}{3pt}
+\definecolor{links}{HTML}{1A0DAB}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=black,
+  citecolor=black
+}
+
+\begin{document}
+
+\sloppy
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\emergencystretch =1em
+
+% =============================
+% HEADER (Name Left / Contact Right)
+% =============================
+\noindent
+\begin{minipage}[t]{0.60\textwidth}
+    {\LARGE \textbf{Joseph Charland}}
+\end{minipage}%
+\hfill%
+\begin{minipage}[t]{0.39\textwidth}\raggedleft
+    \textbf{\href{mailto:joseph.d.charland@gmail.com}{joseph.d.charland@gmail.com}\\}
+    \textbf{(724) 814‑4010}\\
+    \textbf{\href{https://www.linkedin.com/in/joseph-charland/}{linkedin.com/in/joseph-charland}}
+\end{minipage}
+
+\vspace{0.6cm}
+
+% =============================
+% BODY – 70/30 COLUMNS
+% =============================
+\noindent
+\begin{minipage}[t]{0.68\textwidth}
+
+% ---------- LEFT COLUMN ----------
+\section*{Experience}
+\vspace{0.15cm}
+\textbf{BNY,} Pittsburgh: Full Stack Software Engineer \\
+Nov 2023 – Present
+\vspace{0.15cm}
+\begin{itemize}[leftmargin=*, nosep]
+  \item Developed and maintained a mission‑critical interest rate web app using Java and Angular.
+  \item Built Python automation tools to streamline reconciliation and auditing processes.
+  \item Consolidated multi‑stage pipelines into a unified push‑to‑deploy system, reducing release complexity and accelerating delivery cycles.
+  \item Implemented a trunk‑based branching model to enhance integration cadence and boost overall development velocity.
+  \item Integrated mutation testing to developer CI/CD pipeline
+  \item Optimized SQL data models (–90\% resource use / +20\% data retrieval).
+  \item Built test‑data auto‑generation tools improving team autonomy and coverage (+65\%).
+\end{itemize}
+\vspace{0.25cm}
+
+\textbf{PNC Bank,} Remote: Software Engineer\\
+April 2022 – November 2023
+\vspace{0.15cm}
+\begin{itemize}[leftmargin=*, nosep]
+  \item Designed an API migration system for 16 M+ records with zero downtime.
+  \item Reduced API dependency vulnerabilities by 80\%.
+  \item Developed an email one time pass code verification API for secure authentication.
+  \item Automated API monitoring and reporting for stakeholder visibility.
+\end{itemize}
+
+\vspace{0.25cm}
+
+\textbf{PNC Bank,} Project Manager / Business Systems Analyst\\
+November 2021 – April 2022
+\vspace{0.15cm}
+\begin{itemize}[leftmargin=*, nosep]
+  \item Spearheaded enterprise UI development in an agile team.
+  \item Designed wireframes and inline validation interfaces.
+\end{itemize}
+
+\vspace{0.25cm}
+
+\textbf{PNC Bank,} Change Management\\
+August 2020 – November 2021
+\vspace{0.15cm}
+\begin{itemize}[leftmargin=*, nosep]
+  \item Built a Visual Basic Excel Macro for PNC's mortgage appraisal management pipeline cutting turnaround time by 37\%.
+\end{itemize}
+
+\vspace{0.5cm}
+
+\section*{Education}
+\vspace{0.15cm}
+\textbf{Georgia Institute of Technology} \\
+Masters of Science in Computer Science, Computer Systems and AI Specialization (Expected May 2027)\\[4pt]
+\vspace{0.15cm}
+\textbf{University of Pittsburgh} \\
+Bachelors of Science in Business Information Systems \& Supply Chain Management (December 2019)\\[4pt]
+\vspace{0.15cm}
+\textbf{Community College of Allegheny County} \\
+Associate of Science in Software Development (December 2022)\\[4pt]
+
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.30\textwidth}
+\RaggedRight  % prevents ugly spacing by disabling full justification
+
+\setlength{\parskip}{0.5em} % reduces vertical gaps between sections
+
+\textbf{Skills}\\
+API Design, CI/CD, Agile Methodologies, Engineering Leadership, Strategic Planning, Problem Solving
+
+\vspace{0.5cm}
+
+\textbf{Languages}\\
+Python, Java, C, TypeScript, JavaScript, SQL, Bash, Visual Basic
+
+\vspace{0.5cm}
+
+\textbf{Frameworks \& Tools}\\
+Spring Boot, FastAPI, Flask, Angular, Jenkins
+
+\vspace{0.5cm}
+
+\textbf{DevOps~\&~Version~Control}\\
+Git, Bitbucket, GitLab, Jenkins
+
+\vspace{0.5cm}
+
+\textbf{Database~\&~Monitoring}\\
+SQLite3, Splunk, Dynatrace, Logscale
+
+\vspace{0.5cm}
+
+\textbf{Testing~\&~QA}\\
+JUnit, Automated Unit Testing, Integration Testing
+
+\end{minipage}
+
+\end{document}
+
+

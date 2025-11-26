@@ -1,0 +1,39 @@
+<footer class="bg-gray-800/30 border-t border-gray-700 text-gray-400 text-center py-8 mt-16">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="flex justify-center gap-8 mb-4">
+      <a href="https://github.com/jdc141" 
+         target="_blank" 
+         rel="noopener noreferrer"
+         class="text-2xl hover:text-blue-400 transition"
+         aria-label="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="https://www.linkedin.com/in/joseph-charland" 
+         target="_blank" 
+         rel="noopener noreferrer"
+         class="text-2xl hover:text-blue-400 transition"
+         aria-label="LinkedIn">
+        <i class="fab fa-linkedin"></i>
+      </a>
+      <a href="/play" 
+         class="text-2xl hover:text-blue-400 transition easter-egg"
+         aria-label="Easter Egg"
+         title="🎮 Play a game!">
+        🐧
+      </a>
+    </div>
+    <p class="text-sm">© 2025 Joe Charland. Built with Astro & Tailwind CSS.</p>
+  </div>
+</footer>
+
+<style>
+  .easter-egg {
+    opacity: 0.3;
+    transition: all 0.3s ease;
+  }
+  
+  .easter-egg:hover {
+    opacity: 1;
+    transform: scale(1.2) rotate(10deg);
+  }
+</style>

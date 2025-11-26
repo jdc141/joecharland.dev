@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Markdown content styling */
+.prose {
+  color: rgb(209 213 219);
+}
+
+.prose h1 {
+  color: white;
+  font-weight: bold;
+}
+
+.prose h2 {
+  color: white;
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose h3 {
+  color: white;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose p {
+  margin-bottom: 1rem;
+  line-height: 1.75;
+}
+
+.prose strong {
+  color: white;
+  font-weight: 600;
+}
+
+.prose ul {
+  list-style: none;
+  margin: 1rem 0;
+}
+
+.prose ul li {
+  margin-left: 0;
+  margin-bottom: 0.5rem;
+}
+
+.prose a {
+  color: rgb(96 165 250);
+  transition: color 0.2s;
+}
+
+.prose a:hover {
+  color: rgb(147 197 253);
+}

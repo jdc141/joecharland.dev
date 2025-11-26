@@ -1,0 +1,63 @@
+---
+import Layout from "../components/Layout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+
+type ProjectFrontmatter = {
+  title: string;
+  description: string;
+  image?: string;
+  tech?: string[];
+  github?: string;
+  demo?: string;
+  order?: number;
+};
+
+const projectFiles = import.meta.glob<{ frontmatter: ProjectFrontmatter; file: string }>("../content/projects/*.md", { eager: true });
+const projects = Object.entries(projectFiles).map(([path, module]) => ({
+  frontmatter: module.frontmatter,
+  file: path
+}));
+
+// Filter out projects without required fields
+const validProjects = projects.filter(p => 
+  p.frontmatter && 
+  p.frontmatter.title && 
+  p.frontmatter.description
+);
+
+// Separate real projects from the coming-soon placeholder
+const realProjects = validProjects.filter(p => 
+  !p.file?.includes('coming-soon.md')
+);
+
+const comingSoonProject = validProjects.find(p => 
+  p.file?.includes('coming-soon.md')
+);
+
+// Only show coming-soon if there are no real projects
+const projectsToShow = realProjects.length > 0 ? realProjects : (comingSoonProject ? [comingSoonProject] : []);
+
+// Sort projects by order
+const sortedProjects = projectsToShow.sort((a, b) => {
+  const orderA = a.frontmatter?.order || 999;
+  const orderB = b.frontmatter?.order || 999;
+  return orderA - orderB;
+});
+---
+
+<Layout title="Projects - Joe Charland">
+  <div class="mb-12">
+    <h1 class="text-3xl md:text-4xl font-bold mb-4">Projects</h1>
+    <p class="text-gray-400">
+      A collection of my software engineering projects, showcasing work in full-stack development, 
+      course projects, 
+      and random side projects that I'm tinkering with in my free time.
+    </p>
+  </div>
+  
+  <div class="grid sm:grid-cols-2 gap-6">
+    {sortedProjects.map(p => (
+      <ProjectCard {...p.frontmatter} />
+    ))}
+  </div>
+</Layout>

@@ -3,12 +3,18 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "dev": "npm run parse:resume && astro dev",
+    "build": "npm run parse:resume && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "validate:resume": "node scripts/validate-resume.js",
+    "parse:resume": "node scripts/parse-latex-resume.js",
+    "update:pdf": "bash scripts/update-resume-pdf.sh",
+    "resume:sync": "npm run parse:resume && npm run update:pdf"
   },
   "dependencies": {
-    "astro": "^5.16.1"
+    "@tailwindcss/vite": "^4.1.17",
+    "astro": "^5.16.1",
+    "tailwindcss": "^4.1.17"
   }
 }
