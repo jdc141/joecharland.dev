@@ -29,10 +29,10 @@ import Layout from "../components/Layout.astro";
             <canvas id="gameCanvas" width="600" height="200" class="w-full bg-gray-900 rounded cursor-pointer touch-none select-none"></canvas>
             
             <!-- Instructions Overlay -->
-            <div id="instructions" class="absolute inset-0 bg-gray-900/95 rounded flex items-center justify-center">
-              <div class="text-center px-8">
-                <h3 class="text-2xl font-bold mb-6 text-blue-400">Arctic Adventure! 🐧</h3>
-                <div class="space-y-4 text-left max-w-sm mx-auto mb-6">
+            <div id="instructions" class="absolute inset-0 bg-gray-900/95 rounded flex items-center justify-center cursor-pointer">
+              <div class="text-center px-4 md:px-8">
+                <h3 class="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-blue-400">Arctic Adventure! 🐧</h3>
+                <div class="space-y-2 md:space-y-4 text-left max-w-sm mx-auto mb-4 md:mb-6 text-sm md:text-base">
                   <div class="flex items-center gap-3">
                     <span class="text-3xl">🐧</span>
                     <span class="text-gray-300">You're the penguin</span>
@@ -133,6 +133,7 @@ import Layout from "../components/Layout.astro";
   const scoreEl = document.getElementById('score')!;
   const gameOverEl = document.getElementById('gameOver')!;
   const instructionsEl = document.getElementById('instructions')!;
+  const gameOverCTA = document.getElementById('gameOverCTA')!;
 
   // Game state
   let score = 0;
@@ -184,7 +185,7 @@ import Layout from "../components/Layout.astro";
     }
   });
 
-  // Touch/Click controls for mobile
+  // Touch/Click controls for mobile (canvas)
   canvas.addEventListener('click', (e) => {
     e.preventDefault();
     jump();
@@ -194,6 +195,23 @@ import Layout from "../components/Layout.astro";
     e.preventDefault();
     jump();
   });
+
+  // Make instructions overlay tappable too
+  if (instructionsEl) {
+    instructionsEl.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Overlay clicked!');
+      jump();
+    }, true); // Use capture phase
+
+    instructionsEl.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Overlay touched!');
+      jump();
+    }, true); // Use capture phase
+  }
 
   function resetGame() {
     score = 0;
@@ -262,7 +280,7 @@ import Layout from "../components/Layout.astro";
 
     // Update and draw obstacles (polar bears)
     obstacles = obstacles.filter(obs => {
-      obs.x -= 3;
+      obs.x -= 2; // Slowed down from 3 to 2 for better gameplay
 
       // Draw polar bear
       drawPolarBear(obs.x, groundY - obs.height);
@@ -290,7 +308,7 @@ import Layout from "../components/Layout.astro";
     
     // Update and draw power-ups (fish)
     powerUps = powerUps.filter(fish => {
-      fish.x -= 3;
+      fish.x -= 2; // Match obstacle speed
       
       // Draw fish
       drawFish(fish.x, fish.y);
