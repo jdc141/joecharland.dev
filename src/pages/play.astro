@@ -15,12 +15,15 @@ import Layout from "../components/Layout.astro";
       <!-- Game -->
       <div class="max-w-2xl mx-auto mb-4">
         <div class="bg-gray-800/50 border border-gray-700 rounded-lg p-6 relative">
-          <div class="mb-4 flex justify-between items-center">
-            <p class="text-sm text-gray-400">Press <kbd class="px-2 py-1 bg-gray-700 rounded">SPACE</kbd> to jump</p>
+          <div class="mb-4 flex justify-between items-center flex-wrap gap-2">
+            <p class="text-sm text-gray-400">
+              <span class="hidden md:inline">Press <kbd class="px-2 py-1 bg-gray-700 rounded">SPACE</kbd></span>
+              <span class="md:hidden">Tap screen</span> to jump
+            </p>
             <p class="text-sm text-gray-400">Score: <span id="score">0</span> | High: <span id="highScore">0</span></p>
           </div>
           <div class="relative">
-            <canvas id="gameCanvas" width="600" height="200" class="w-full bg-gray-900 rounded"></canvas>
+            <canvas id="gameCanvas" width="600" height="200" class="w-full bg-gray-900 rounded cursor-pointer touch-none select-none"></canvas>
             
             <!-- Instructions Overlay -->
             <div id="instructions" class="absolute inset-0 bg-gray-900/95 rounded flex items-center justify-center">
@@ -40,11 +43,15 @@ import Layout from "../components/Layout.astro";
                     <span class="text-gray-300">Collect fish for super jump</span>
                   </div>
                   <div class="flex items-center gap-3">
-                    <kbd class="px-3 py-1 bg-gray-700 rounded text-sm">SPACE</kbd>
-                    <span class="text-gray-300">Jump</span>
+                    <kbd class="px-3 py-1 bg-gray-700 rounded text-sm hidden md:inline-block">SPACE</kbd>
+                    <span class="md:hidden text-2xl">👆</span>
+                    <span class="text-gray-300"><span class="hidden md:inline">Press SPACE</span><span class="md:hidden">Tap</span> to jump</span>
                   </div>
                 </div>
-                <p class="text-blue-400 animate-pulse">Press SPACE to start!</p>
+                <p class="text-blue-400 animate-pulse">
+                  <span class="hidden md:inline">Press SPACE</span>
+                  <span class="md:hidden">Tap anywhere</span> to start!
+                </p>
               </div>
             </div>
           </div>
@@ -147,20 +154,38 @@ import Layout from "../components/Layout.astro";
   let powerUpTimer = 0;
 
   // Controls
+  // Jump function
+  function jump() {
+    if (!gameStarted) {
+      // Hide instructions and start game
+      instructionsEl.classList.add('hidden');
+      gameStarted = true;
+      gameLoop();
+    } else if (gameOver) {
+      resetGame();
+    } else if (!player.jumping) {
+      player.velocityY = jumpPower;
+      player.jumping = true;
+    }
+  }
+
+  // Keyboard controls
   document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
       e.preventDefault();
-      if (!gameStarted) {
-        instructionsEl.classList.add('hidden');
-        gameStarted = true;
-        gameLoop();
-      } else if (gameOver) {
-        resetGame();
-      } else if (!player.jumping) {
-        player.velocityY = jumpPower;
-        player.jumping = true;
-      }
+      jump();
     }
+  });
+
+  // Touch/Click controls for mobile
+  canvas.addEventListener('click', (e) => {
+    e.preventDefault();
+    jump();
+  });
+
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    jump();
   });
 
   function resetGame() {
