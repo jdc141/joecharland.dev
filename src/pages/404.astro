@@ -216,14 +216,12 @@ import Layout from "../components/Layout.astro";
     instructionsEl.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log('Overlay clicked!');
       jump();
     }, true); // Use capture phase
 
     instructionsEl.addEventListener('touchstart', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log('Overlay touched!');
       jump();
     }, true); // Use capture phase
   }

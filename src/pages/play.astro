@@ -64,7 +64,9 @@ import Layout from "../components/Layout.astro";
             </div>
           </div>
           <div id="gameOver" class="mt-4 hidden">
-            <p class="text-sm text-red-400 mb-4">Game Over! Press SPACE to restart</p>
+            <p class="text-sm text-red-400 mb-4">
+              Game Over! <span class="hidden md:inline">Press SPACE</span><span class="md:hidden">Tap</span> to restart
+            </p>
             <div class="bg-blue-600/10 border border-blue-500/30 rounded-lg p-4 mt-4">
               <p class="text-gray-300 mb-3">
                 Seems like you're enjoying this game... 🤔
@@ -209,14 +211,12 @@ import Layout from "../components/Layout.astro";
     instructionsEl.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log('Overlay clicked!');
       jump();
     }, true); // Use capture phase
 
     instructionsEl.addEventListener('touchstart', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log('Overlay touched!');
       jump();
     }, true); // Use capture phase
   }
@@ -434,7 +434,8 @@ import Layout from "../components/Layout.astro";
     ctx.lineTo(canvas.width, groundY);
     ctx.stroke();
 
-    if (!gameOver) {
+    // Continue game loop
+    if (!gameOver && gameStarted) {
       requestAnimationFrame(gameLoop);
     }
   }
