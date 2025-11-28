@@ -37,7 +37,8 @@ try {
       title: "Full Stack Software Engineer",
       github: "",
       linkedin: "",
-      email: ""
+      email: "",
+      website: ""
     },
     experience: [],
     education: [],
@@ -82,6 +83,12 @@ try {
   if (linkedinMatch) {
     resumeData.personal.linkedin = linkedinMatch[1];
     resumeData.personal.github = "jdc141"; // Default, update if in LaTeX
+  }
+  
+  // Extract website URL (e.g., joecharland.dev)
+  const websiteMatch = latexContent.match(/\\href\{(https?:\/\/[^}]*joecharland\.dev[^}]*)\}/);
+  if (websiteMatch) {
+    resumeData.personal.website = websiteMatch[1];
   }
   
   // Parse Experience Section
