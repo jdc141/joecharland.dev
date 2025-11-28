@@ -7,7 +7,7 @@ I'm a **Full Stack Software Engineer** at **BNY** in Pittsburgh, where I develop
 My work focuses on building scalable web applications, automating development workflows, and optimizing system performance. I'm passionate about creating robust, maintainable software that operates efficiently at scale.
 
 ## Current Course Work
-[CS 6200: Introduction to Operating Systems](https://omscs.gatech.edu/cs-6200-introduction-operating-systems)
+<a href="https://omscs.gatech.edu/cs-6200-introduction-operating-systems" target="_blank" rel="noopener noreferrer">CS 6200: Introduction to Operating Systems</a>
 
 ## Currently Exploring
 - C / C++
