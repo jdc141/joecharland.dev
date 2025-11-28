@@ -4,16 +4,22 @@ import Layout from "../components/Layout.astro";
 
 <Layout title="Arctic Adventure - Joe Charland">
   <section class="text-center py-8">
-    <div class="animate-fade-in">
-      <h1 class="text-4xl md:text-5xl font-bold mb-4 gradient-text">
-        Arctic Adventure 🐧
-      </h1>
-      <p class="text-gray-400 mb-6">
+    <div>
+      <!-- Intro Animation with Title -->
+      <div id="intro-animation" class="relative h-32 mb-4 overflow-hidden">
+        <h1 class="title-reveal text-4xl md:text-5xl font-bold gradient-text">
+          Arctic Adventure 🐧
+        </h1>
+        <div class="penguin-runner">🐧</div>
+        <div class="bear-chaser">🐻‍❄️</div>
+      </div>
+
+      <p class="text-gray-400 mb-6 game-content">
         A mini penguin jumping game!
       </p>
       
       <!-- Game -->
-      <div class="max-w-2xl mx-auto mb-4">
+      <div class="max-w-2xl mx-auto mb-4 game-content">
         <div class="bg-gray-800/50 border border-gray-700 rounded-lg p-6 relative">
           <div class="mb-4 flex justify-between items-center text-xs md:text-sm flex-wrap gap-2">
             <p class="text-gray-400">
@@ -32,7 +38,7 @@ import Layout from "../components/Layout.astro";
             <!-- Instructions Overlay -->
             <div id="instructions" class="absolute inset-0 bg-gray-900/95 rounded flex items-center justify-center cursor-pointer">
               <div class="text-center px-3 md:px-6 py-2">
-                <h3 class="text-lg md:text-xl font-bold mb-3 text-blue-400">How to Play</h3>
+                <h3 class="text-lg md:text-xl font-bold mb-3 gradient-text-small">How to Play</h3>
                 <div class="space-y-1.5 md:space-y-2 text-left max-w-xs mx-auto mb-3 text-xs md:text-sm">
                   <div class="flex items-center gap-2">
                     <span class="text-xl md:text-2xl">🐧</span>
@@ -67,7 +73,7 @@ import Layout from "../components/Layout.astro";
             <p class="text-sm text-red-400 mb-4">
               Game Over! <span class="hidden md:inline">Press SPACE</span><span class="md:hidden">Tap</span> to restart
             </p>
-            <div class="bg-blue-600/10 border border-blue-500/30 rounded-lg p-4 mt-4">
+            <div id="gameOverCTA" class="bg-blue-600/10 border border-blue-500/30 rounded-lg p-4 mt-4">
               <p class="text-gray-300 mb-3">
                 Seems like you're enjoying this game... 🤔
               </p>
@@ -84,7 +90,7 @@ import Layout from "../components/Layout.astro";
         </div>
       </div>
 
-      <div class="flex gap-4 justify-center flex-wrap mt-2">
+      <div class="flex gap-4 justify-center flex-wrap mt-2 game-content">
         <a href="/" 
            class="border border-gray-600 hover:bg-gray-700 px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
           <i class="fas fa-home mr-2"></i>
@@ -97,19 +103,86 @@ import Layout from "../components/Layout.astro";
 
 <style>
   .gradient-text {
-    background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa);
-    background-size: 200% auto;
+    background: linear-gradient(90deg, #0891b2, #06b6d4, #22d3ee, #67e8f9, #06b6d4, #0891b2);
+    background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: gradient-flow 4s linear infinite;
+    animation: gradient-flow 6s ease-in-out infinite;
   }
 
   @keyframes gradient-flow {
-    to { background-position: 200% center; }
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 100% center; }
   }
 
-  .animate-fade-in {
+  .gradient-text-small {
+    background: linear-gradient(90deg, #0891b2, #06b6d4, #22d3ee, #67e8f9, #06b6d4, #0891b2);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-flow 6s ease-in-out infinite;
+  }
+
+  /* Intro Animation - Title Area Only */
+  #intro-animation {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .title-reveal {
+    opacity: 0;
+    animation: titleFadeIn 0.8s ease-out 2.2s forwards;
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes titleFadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .penguin-runner {
+    position: absolute;
+    font-size: 3rem;
+    animation: runAcrossTitle 2s ease-in-out;
+    left: -100px;
+    z-index: 10;
+  }
+
+  @keyframes runAcrossTitle {
+    0% { left: -100px; }
+    100% { left: 110%; }
+  }
+
+  .bear-chaser {
+    position: absolute;
+    font-size: 3rem;
+    animation: chaseAcrossTitle 2s ease-in-out 0.3s;
+    left: -150px;
+    z-index: 10;
+  }
+
+  @keyframes chaseAcrossTitle {
+    0% { left: -150px; }
+    100% { left: 110%; }
+  }
+
+  /* Game content fades in after title */
+  .game-content {
+    opacity: 0;
+    animation: contentFadeIn 0.6s ease-out 2.8s forwards;
+  }
+
+  @keyframes contentFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .content-fade-in {
     animation: fadeIn 0.8s ease-out;
   }
 
@@ -130,14 +203,12 @@ import Layout from "../components/Layout.astro";
   const scoreEl = document.getElementById('score')!;
   const fishCountEl = document.getElementById('fishCount')!;
   const starCountEl = document.getElementById('starCount')!;
-  const highScoreEl = document.getElementById('highScore')!;
   const gameOverEl = document.getElementById('gameOver')!;
   const instructionsEl = document.getElementById('instructions')!;
   const gameOverCTA = document.getElementById('gameOverCTA')!;
 
-  // Load high score from localStorage
+  // Load high score from localStorage (stored but not displayed)
   let highScore = parseInt(localStorage.getItem('penguinHighScore') || '0');
-  highScoreEl.textContent = highScore.toString();
 
   // Game state
   let score = 0;
@@ -206,19 +277,27 @@ import Layout from "../components/Layout.astro";
     jump();
   });
 
-  // Make instructions overlay tappable too
+  // Make instructions overlay tappable too - must happen after DOM is ready
   if (instructionsEl) {
-    instructionsEl.addEventListener('click', (e) => {
+    console.log('Setting up overlay listeners for:', instructionsEl);
+    
+    // Click event
+    instructionsEl.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
+      console.log('Overlay clicked, gameStarted:', gameStarted);
       jump();
-    }, true); // Use capture phase
+    }, { capture: true, passive: false });
 
-    instructionsEl.addEventListener('touchstart', (e) => {
+    // Touch event
+    instructionsEl.addEventListener('touchstart', function(e) {
       e.preventDefault();
       e.stopPropagation();
+      console.log('Overlay touched, gameStarted:', gameStarted);
       jump();
-    }, true); // Use capture phase
+    }, { capture: true, passive: false });
+  } else {
+    console.error('Instructions overlay element not found!');
   }
 
   function resetGame() {
@@ -243,8 +322,8 @@ import Layout from "../components/Layout.astro";
     fishCountEl.textContent = '0';
     starCountEl.textContent = '0';
     gameOverEl.classList.add('hidden');
+    if (gameOverCTA) gameOverCTA.classList.add('hidden');
     instructionsEl.classList.add('hidden');
-    gameOverCTA.classList.add('hidden');
     gameLoop();
   }
 
@@ -329,11 +408,11 @@ import Layout from "../components/Layout.astro";
       ) {
         gameOver = true;
         gameOverEl.classList.remove('hidden');
+        if (gameOverCTA) gameOverCTA.classList.remove('hidden');
         
         // Update high score
         if (score > highScore) {
           highScore = score;
-          highScoreEl.textContent = highScore.toString();
           localStorage.setItem('penguinHighScore', highScore.toString());
         }
         return false;

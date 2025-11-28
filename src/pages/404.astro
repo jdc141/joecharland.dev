@@ -35,7 +35,7 @@ import Layout from "../components/Layout.astro";
             <!-- Instructions Overlay -->
             <div id="instructions" class="absolute inset-0 bg-gray-900/95 rounded flex items-center justify-center cursor-pointer">
               <div class="text-center px-3 md:px-6 py-2">
-                <h3 class="text-lg md:text-xl font-bold mb-3 text-blue-400">Arctic Adventure! 🐧</h3>
+                <h3 class="text-lg md:text-xl font-bold mb-3 gradient-text-small">Arctic Adventure! 🐧</h3>
                 <div class="space-y-1.5 md:space-y-2 text-left max-w-xs mx-auto mb-3 text-xs md:text-sm">
                   <div class="flex items-center gap-2">
                     <span class="text-xl md:text-2xl">🐧</span>
@@ -67,8 +67,10 @@ import Layout from "../components/Layout.astro";
             </div>
           </div>
           <div id="gameOver" class="mt-4 hidden">
-            <p class="text-sm text-red-400 mb-4">Game Over! Press SPACE to restart</p>
-            <div class="bg-blue-600/10 border border-blue-500/30 rounded-lg p-4 mt-4">
+            <p class="text-sm text-red-400 mb-4">
+              Game Over! <span class="hidden md:inline">Press SPACE</span><span class="md:hidden">Tap</span> to restart
+            </p>
+            <div id="gameOverCTA" class="bg-blue-600/20 border border-blue-500 rounded-lg p-4 mt-4">
               <p class="text-gray-300 mb-3">
                 Seems like you're enjoying this game... 🤔
               </p>
@@ -108,16 +110,26 @@ import Layout from "../components/Layout.astro";
 
 <style>
   .gradient-text {
-    background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa);
-    background-size: 200% auto;
+    background: linear-gradient(90deg, #0891b2, #06b6d4, #22d3ee, #67e8f9, #06b6d4, #0891b2);
+    background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: gradient-flow 4s linear infinite;
+    animation: gradient-flow 6s ease-in-out infinite;
   }
 
   @keyframes gradient-flow {
-    to { background-position: 200% center; }
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+  }
+
+  .gradient-text-small {
+    background: linear-gradient(90deg, #0891b2, #06b6d4, #22d3ee, #67e8f9, #06b6d4, #0891b2);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-flow 6s ease-in-out infinite;
   }
 
   .animate-fade-in {
@@ -248,6 +260,7 @@ import Layout from "../components/Layout.astro";
     fishCountEl.textContent = '0';
     starCountEl.textContent = '0';
     gameOverEl.classList.add('hidden');
+    if (gameOverCTA) gameOverCTA.classList.add('hidden');
     instructionsEl.classList.add('hidden');
     gameLoop();
   }
@@ -337,6 +350,7 @@ import Layout from "../components/Layout.astro";
       ) {
         gameOver = true;
         gameOverEl.classList.remove('hidden');
+        if (gameOverCTA) gameOverCTA.classList.remove('hidden');
         return false;
       }
 
