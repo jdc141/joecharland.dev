@@ -16,8 +16,8 @@ import Layout from "../components/Layout.astro";
       </p>
       
       <!-- Mini Game -->
-      <div class="max-w-2xl mx-auto mb-8">
-        <div class="bg-gray-800/50 border border-gray-700 rounded-lg p-6 relative">
+      <div class="max-w-2xl mx-auto mb-12">
+        <div class="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
           <div class="mb-4 flex justify-between items-center text-xs md:text-sm flex-wrap gap-2">
             <p class="text-gray-400">
               <span class="hidden md:inline">Press <kbd class="px-2 py-1 bg-gray-700 rounded text-xs">SPACE</kbd></span>
@@ -29,60 +29,57 @@ import Layout from "../components/Layout.astro";
               <span>⭐ <span id="starCount" class="text-yellow-300 font-semibold">0</span></span>
             </div>
           </div>
-          <div class="relative">
+          <div class="relative isolate overflow-hidden rounded">
             <canvas id="gameCanvas" width="600" height="200" class="w-full bg-gray-900 rounded cursor-pointer touch-none select-none"></canvas>
             
             <!-- Instructions Overlay -->
-            <div id="instructions" class="absolute inset-0 bg-gray-900/95 rounded flex items-center justify-center cursor-pointer">
-              <div class="text-center px-3 md:px-6 py-2">
-                <h3 class="text-lg md:text-xl font-bold mb-3 gradient-text-small">Arctic Adventure! 🐧</h3>
-                <div class="space-y-1.5 md:space-y-2 text-left max-w-xs mx-auto mb-3 text-xs md:text-sm">
-                  <div class="flex items-center gap-2">
-                    <span class="text-xl md:text-2xl">🐧</span>
-                    <span class="text-gray-300 text-xs md:text-sm">You're the penguin</span>
+            <div id="instructions" class="absolute inset-0 bg-gray-900/95 rounded flex items-center justify-center cursor-pointer z-20">
+              <div class="text-center px-2">
+                <h3 class="text-sm md:text-base font-bold mb-1.5 gradient-text-small">Arctic Adventure! 🐧</h3>
+                <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 max-w-xs mx-auto mb-1.5 text-xs">
+                  <div class="flex items-center gap-1">
+                    <span class="text-sm">🐧</span>
+                    <span class="text-gray-300">You</span>
                   </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-xl md:text-2xl">🐻‍❄️</span>
-                    <span class="text-gray-300 text-xs md:text-sm">Avoid polar bears</span>
+                  <div class="flex items-center gap-1">
+                    <span class="text-sm">🐻‍❄️</span>
+                    <span class="text-gray-300">Avoid</span>
                   </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-xl md:text-2xl">🐟</span>
-                    <span class="text-gray-300 text-xs md:text-sm">Fish = super jump</span>
+                  <div class="flex items-center gap-1">
+                    <span class="text-sm">🐟</span>
+                    <span class="text-gray-300">Super jump</span>
                   </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-xl md:text-2xl">⭐</span>
-                    <span class="text-gray-300 text-xs md:text-sm">Stars = +5 points</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <kbd class="px-2 py-0.5 bg-gray-700 rounded text-xs hidden md:inline-block">SPACE</kbd>
-                    <span class="md:hidden text-xl">👆</span>
-                    <span class="text-gray-300 text-xs md:text-sm"><span class="hidden md:inline">SPACE</span><span class="md:hidden">Tap</span> to jump</span>
+                  <div class="flex items-center gap-1">
+                    <span class="text-sm">⭐</span>
+                    <span class="text-gray-300">+5 pts</span>
                   </div>
                 </div>
-                <p class="text-blue-400 animate-pulse text-xs md:text-sm">
+                <p class="text-blue-400 animate-pulse text-xs">
                   <span class="hidden md:inline">Press SPACE</span>
                   <span class="md:hidden">Tap</span> to start!
                 </p>
               </div>
             </div>
           </div>
-          <div id="gameOver" class="mt-4 hidden">
-            <p class="text-sm text-red-400 mb-4">
-              Game Over! <span class="hidden md:inline">Press SPACE</span><span class="md:hidden">Tap</span> to restart
+        </div>
+        
+        <!-- Game Over Message - Outside game container -->
+        <div id="gameOver" class="mt-6 hidden">
+          <p class="text-sm text-red-400 mb-4">
+            Game Over! <span class="hidden md:inline">Press SPACE</span><span class="md:hidden">Tap</span> to restart
+          </p>
+          <div id="gameOverCTA" class="bg-blue-600/20 border border-blue-500 rounded-lg p-4 max-w-md mx-auto">
+            <p class="text-gray-300 mb-3">
+              Seems like you're enjoying this game... 🤔
             </p>
-            <div id="gameOverCTA" class="bg-blue-600/20 border border-blue-500 rounded-lg p-4 mt-4">
-              <p class="text-gray-300 mb-3">
-                Seems like you're enjoying this game... 🤔
-              </p>
-              <p class="text-gray-300 mb-4">
-                Maybe you'd enjoy <strong class="text-white">hiring me</strong> too?
-              </p>
-              <a href="/resume" 
-                 class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 text-sm">
-                <i class="fas fa-user-tie"></i>
-                View Resume
-              </a>
-            </div>
+            <p class="text-gray-300 mb-4">
+              Maybe you'd enjoy <strong class="text-white">hiring me</strong> too?
+            </p>
+            <a href="/resume" 
+               class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 text-sm">
+              <i class="fas fa-user-tie"></i>
+              View Resume
+            </a>
           </div>
         </div>
       </div>
