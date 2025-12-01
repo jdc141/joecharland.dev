@@ -20,3 +20,9 @@ My work is all about building scalable web applications, automating the boring s
 When I'm not staring at code, you'll probably find me cheering way too loudly for the **Pittsburgh Steelers** or **Pitt Football**, going for a run, or—like every millennial/Gen Z—playing pickleball and pretending I'm better at it than I actually am. 🏓
 
 I'm always looking for new ways to challenge myself, whether that's learning a new tech stack or finally beating my PR on a 5K.
+
+## Get In Touch
+
+Want to collaborate on a project or just chat about tech? Feel free to reach out!
+
+📧 **joseph.d.charland@gmail.com**

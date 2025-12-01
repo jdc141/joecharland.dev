@@ -18,13 +18,20 @@ import resumeData from "../data/resume.json";
     </div>
 
     <!-- Contact Info -->
-    <div class="mb-12 text-gray-300 flex flex-wrap gap-4 text-sm">
-      <a href={`https://github.com/${resumeData.personal.github}`} target="_blank" rel="noopener noreferrer" class="hover:text-blue-400 transition">
-        <i class="fab fa-github"></i> {resumeData.personal.github}
-      </a>
-      <a href={`https://www.linkedin.com/in/${resumeData.personal.linkedin}`} target="_blank" rel="noopener noreferrer" class="hover:text-blue-400 transition">
-        <i class="fab fa-linkedin"></i> {resumeData.personal.linkedin}
-      </a>
+    <div class="mb-12 text-gray-300 text-sm">
+      <div class="flex flex-wrap gap-4 mb-2">
+        <a href={`https://github.com/${resumeData.personal.github}`} target="_blank" rel="noopener noreferrer" class="hover:text-blue-400 transition">
+          <i class="fab fa-github"></i> {resumeData.personal.github}
+        </a>
+        <a href={`https://www.linkedin.com/in/${resumeData.personal.linkedin}`} target="_blank" rel="noopener noreferrer" class="hover:text-blue-400 transition">
+          <i class="fab fa-linkedin"></i> {resumeData.personal.linkedin}
+        </a>
+      </div>
+      <div>
+        <a href="mailto:joseph.d.charland@gmail.com" class="hover:text-blue-400 transition">
+          <i class="fas fa-envelope"></i> joseph.d.charland@gmail.com
+        </a>
+      </div>
     </div>
 
     <!-- Experience Section -->
