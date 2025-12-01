@@ -2,7 +2,7 @@
 title: "About"
 ---
 
-Hey! I'm a **Full Stack Software Engineer** at **BNY** in Pittsburgh, where I spend my days building financial applications that help keep money moving where it needs to go. I'm also pursuing an **M.S. in Computer Science** at **Georgia Tech** (OMSCS program), diving deep into **Computing Systems** and **Artificial Intelligence**—because who doesn't love a good challenge? (Expected graduation: May 2027!)
+Hey! I'm a **Full Stack Software Engineer** at **BNY** based out of Pittsburgh, where I spend my days building financial applications that help keep money moving where it needs to go. I'm also pursuing an **M.S. in Computer Science** at **Georgia Tech**, diving deep into **Computing Systems** and **Artificial Intelligence** - (Expected graduation: May 2027)
 
 My work is all about building scalable web applications, automating the boring stuff, and making systems run faster. I geek out over clean code, efficient architecture, and finding creative solutions to complex problems.
 
