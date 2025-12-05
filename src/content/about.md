@@ -17,7 +17,7 @@ My work is all about building scalable web applications, automating the boring s
 
 ## Outside of Work
 
-When I'm not staring at code, you'll probably find me cheering way too loudly for the **Pittsburgh Steelers** or **Pitt Football**, going for a run, or—like every millennial/Gen Z—playing pickleball and pretending I'm better at it than I actually am. 🏓
+When I'm not writing code, you'll find me cheering on the **Pittsburgh Steelers** or **Pitt Football**, going for runs, or out on the pickleball court trying to improve my game. 🏓
 
 I'm always looking for new ways to challenge myself, whether that's learning a new tech stack or finally beating my PR on a 5K.
 
