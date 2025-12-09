@@ -16,6 +16,12 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const { Content } = await project.render();
 const { title, description, image, tech = [], github, demo, inProgress, deployed } = project.data;
+
+// Support tuple-style links [enabled, url] as well as plain string urls
+const githubEnabled = Array.isArray(github) ? github[0] : !!github;
+const githubUrl = Array.isArray(github) ? github[1] : github;
+const demoEnabled = Array.isArray(demo) ? demo[0] : !!demo;
+const demoUrl = Array.isArray(demo) ? demo[1] : demo;
 ---
 
 <Layout title={`${title} - Joe Charland`}>
@@ -40,9 +46,9 @@ const { title, description, image, tech = [], github, demo, inProgress, deployed
 
       <!-- Links -->
       <div class="flex gap-4 text-lg mb-6">
-        {github && (
+        {githubEnabled && githubUrl && (
           <a 
-            href={github} 
+            href={githubUrl} 
             target="_blank" 
             rel="noopener noreferrer"
             class="inline-flex items-center gap-2 btn-ternary px-4 py-2 rounded-lg"
@@ -51,9 +57,9 @@ const { title, description, image, tech = [], github, demo, inProgress, deployed
             <span>View on GitHub</span>
           </a>
         )}
-        {deployed && demo && (
+        {deployed && demoEnabled && demoUrl && (
           <a 
-            href={demo} 
+            href={demoUrl} 
             target="_blank" 
             rel="noopener noreferrer"
             class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg transition"
