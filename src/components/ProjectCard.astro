@@ -6,62 +6,159 @@ interface Props {
   tech?: string[];
   github?: string;
   demo?: string;
+  inProgress?: boolean;
+  deployed?: boolean;
+  slug?: string;
 }
 
-const { title, image, description, tech = [], github, demo } = Astro.props as Props;
+const { title, image, description, tech = [], github, demo, inProgress = false, deployed = false, slug } = Astro.props;
+const isComingSoon = slug === 'coming-soon';
+const hasDetailPage = slug && slug !== 'coming-soon';
+const detailPageUrl = hasDetailPage ? `/projects/${slug}` : (isComingSoon ? '/coming-soon' : null);
+
+// Create unique IDs for event handling (only needed for clickable cards)
+const githubId = github && detailPageUrl ? `github-${slug}-${Math.random().toString(36).slice(2, 9)}` : null;
+const demoId = demo && deployed && detailPageUrl ? `demo-${slug}-${Math.random().toString(36).slice(2, 9)}` : null;
 ---
 
-<article class="bg-gray-800/50 border border-gray-700 rounded-lg overflow-hidden hover:border-blue-500 transition-all duration-300 flex flex-col">
-  {image ? (
-    <img 
-      src={image} 
-      alt={title} 
-      class="w-full object-cover h-48 bg-gray-700"
-      loading="lazy"
-    />
-  ) : (
-    <div class="w-full h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20 flex items-center justify-center">
-      <i class="fas fa-code text-4xl text-gray-600"></i>
-    </div>
-  )}
-  
-  <div class="p-6 flex flex-col flex-grow">
-    <h3 class="text-xl font-bold text-white mb-3">{title}</h3>
-    <p class="text-gray-300 text-sm mb-4 flex-grow">{description}</p>
-    
-    {tech.length > 0 && (
-      <div class="flex flex-wrap gap-2 mb-4">
-        {tech.map(t => (
-          <span class="bg-gray-700/70 text-blue-300 text-xs px-3 py-1 rounded-full font-medium">
-            {t}
-          </span>
-        ))}
+{detailPageUrl ? (
+  <a href={detailPageUrl} class="block h-full group">
+    <article class="bg-gray-800/50 border border-gray-700 rounded-lg overflow-hidden hover:border-blue-500 transition-all duration-300 flex flex-col h-full cursor-pointer">
+      {image ? (
+        <img 
+          src={image} 
+          alt={title} 
+          class="w-full object-cover h-48 bg-gray-700"
+          loading="lazy"
+        />
+      ) : (
+        <div class="w-full h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20 flex items-center justify-center">
+          <i class="fas fa-code text-4xl text-gray-600"></i>
+        </div>
+      )}
+      
+      <div class="p-6 flex flex-col flex-grow">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xl font-bold text-white">{title}</h3>
+          {inProgress && (
+            <span class="bg-blue-500/20 text-blue-300 text-xs px-2 py-1 rounded-full font-medium border border-blue-500/30">
+              🚧 Building
+            </span>
+          )}
+        </div>
+        <p class="text-gray-300 text-sm mb-4 flex-grow">{description}</p>
+        
+        {tech.length > 0 && (
+          <div class="flex flex-wrap gap-2 mb-4">
+            {tech.map(t => (
+              <span class="bg-gray-700/70 text-blue-300 text-xs px-3 py-1 rounded-full font-medium">
+                {t}
+              </span>
+            ))}
+          </div>
+        )}
+        
+        <div class="flex items-center justify-between w-full text-lg">
+          <div class="flex gap-3 items-center">
+            {github && (
+              <span 
+                id={githubId}
+                data-url={github}
+                class="project-link hover:text-blue-400 transition z-20 relative cursor-pointer"
+                aria-label={`View ${title} on GitHub`}>
+                <i class="fab fa-github"></i>
+              </span>
+            )}
+            {deployed && demo && (
+              <span 
+                id={demoId}
+                data-url={demo}
+                class="project-link hover:text-blue-400 transition z-20 relative cursor-pointer"
+                aria-label={`View ${title} live`}>
+                <i class="fas fa-external-link-alt"></i>
+              </span>
+            )}
+          </div>
+          <div class="text-blue-400 text-sm font-medium flex items-center gap-1 group-hover:text-blue-300 transition">
+            <span>{isComingSoon ? 'Peek Inside' : 'View Details'}</span>
+            <i class="fas fa-arrow-right text-xs arrow-wave"></i>
+          </div>
+        </div>
+      </div>
+    </article>
+  </a>
+) : (
+  <article class="bg-gray-800/50 border border-gray-700 rounded-lg overflow-hidden hover:border-blue-500 transition-all duration-300 flex flex-col h-full">
+    {image ? (
+      <img 
+        src={image} 
+        alt={title} 
+        class="w-full object-cover h-48 bg-gray-700"
+        loading="lazy"
+      />
+    ) : (
+      <div class="w-full h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20 flex items-center justify-center">
+        <i class="fas fa-code text-4xl text-gray-600"></i>
       </div>
     )}
     
-    <div class="flex gap-4 text-lg">
-      {github && (
-        <a 
-          href={github} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="hover:text-blue-400 transition"
-          aria-label={`View ${title} on GitHub`}>
-          <i class="fab fa-github"></i>
-          <span class="ml-2 text-sm">Code</span>
-        </a>
+    <div class="p-6 flex flex-col flex-grow">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-xl font-bold text-white">{title}</h3>
+        {inProgress && (
+          <span class="bg-blue-500/20 text-blue-300 text-xs px-2 py-1 rounded-full font-medium border border-blue-500/30">
+            🚧 Building
+          </span>
+        )}
+      </div>
+      <p class="text-gray-300 text-sm mb-4 flex-grow">{description}</p>
+      
+      {tech.length > 0 && (
+        <div class="flex flex-wrap gap-2 mb-4">
+          {tech.map(t => (
+            <span class="bg-gray-700/70 text-blue-300 text-xs px-3 py-1 rounded-full font-medium">
+              {t}
+            </span>
+          ))}
+        </div>
       )}
-      {demo && (
-        <a 
-          href={demo} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="hover:text-blue-400 transition"
-          aria-label={`View ${title} demo`}>
-          <i class="fas fa-external-link-alt"></i>
-          <span class="ml-2 text-sm">Demo</span>
-        </a>
-      )}
+      
+      <div class="flex items-center text-lg">
+        {github && (
+          <a 
+            href={github} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="hover:text-blue-400 transition"
+            aria-label={`View ${title} on GitHub`}>
+            <i class="fab fa-github"></i>
+          </a>
+        )}
+        {deployed && demo && (
+          <a 
+            href={demo} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="hover:text-blue-400 transition ml-3"
+            aria-label={`View ${title} live`}>
+            <i class="fas fa-external-link-alt"></i>
+          </a>
+        )}
+      </div>
     </div>
-  </div>
-</article>
+  </article>
+)}
+
+<script>
+  // Handle project link clicks (prevent card navigation when clicking external links)
+  document.querySelectorAll('.project-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const url = (e.currentTarget as HTMLElement).getAttribute('data-url');
+      if (url) {
+        window.open(url, '_blank');
+      }
+    });
+  });
+</script>

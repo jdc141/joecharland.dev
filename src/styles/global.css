@@ -5,7 +5,9 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Markdown content styling */
+/* ============================================
+   MARKDOWN CONTENT STYLING (PROSE)
+   ============================================ */
 .prose {
   color: rgb(209 213 219);
 }
@@ -17,16 +19,16 @@ html {
 
 .prose h2 {
   color: white;
-  font-weight: 600;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
 
 .prose h3 {
   color: white;
+  font-size: 1.5rem;
   font-weight: 600;
-  font-size: 1.25rem;
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
 }
@@ -42,20 +44,143 @@ html {
 }
 
 .prose ul {
-  list-style: none;
+  list-style-type: disc;
+  padding-left: 1.5rem;
   margin: 1rem 0;
 }
 
-.prose ul li {
-  margin-left: 0;
+.prose li {
   margin-bottom: 0.5rem;
 }
 
 .prose a {
   color: rgb(96 165 250);
+  text-decoration: underline;
   transition: color 0.2s;
 }
 
 .prose a:hover {
   color: rgb(147 197 253);
+}
+
+.prose code {
+  background-color: rgba(55, 65, 81, 0.5);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.prose pre {
+  background-color: rgba(31, 41, 55, 0.5);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+/* ============================================
+   REUSABLE ANIMATIONS
+   ============================================ */
+
+/* Arrow wave animation */
+@keyframes arrow-wave {
+  0%, 100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+.arrow-wave {
+  animation: arrow-wave 2s ease-in-out infinite;
+}
+
+a:hover .arrow-wave,
+.group:hover .arrow-wave {
+  animation: arrow-wave 1s ease-in-out infinite;
+}
+
+/* Fade in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out;
+}
+
+.animate-fade-in-delay {
+  animation: fade-in 1s ease-out 0.3s both;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Button pulse with glow */
+@keyframes button-pulse {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.05);
+  }
+}
+
+.btn-pulse {
+  position: relative;
+}
+
+.btn-pulse::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 0.5rem;
+  background: rgb(37 99 235);
+  opacity: 0;
+  animation: button-pulse 2s ease-in-out infinite;
+}
+
+/* Name highlight effect */
+.name-highlight {
+  color: rgb(96 165 250);
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.name-highlight:hover {
+  color: rgb(147 197 253);
+  text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+  transform: scale(1.05);
+}
+
+/* Easter egg hover effect */
+.easter-egg {
+  opacity: 0.3;
+  transition: all 0.3s ease;
+}
+
+.easter-egg:hover {
+  opacity: 1;
+  transform: scale(1.2) rotate(10deg);
 }

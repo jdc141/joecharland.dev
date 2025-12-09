@@ -10,6 +10,8 @@ const projects = defineCollection({
     github: z.string().optional(),
     demo: z.string().optional(),
     order: z.number().optional(),
+    inProgress: z.boolean().optional(),
+    deployed: z.boolean().optional(),
   }),
 });
 

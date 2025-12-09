@@ -1,46 +1,24 @@
 ---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import Layout from "../components/Layout.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 
-type ProjectFrontmatter = {
-  title: string;
-  description: string;
-  image?: string;
-  tech?: string[];
-  github?: string;
-  demo?: string;
-  order?: number;
-};
-
-const projectFiles = import.meta.glob<{ frontmatter: ProjectFrontmatter; file: string }>("../content/projects/*.md", { eager: true });
-const projects = Object.entries(projectFiles).map(([path, module]) => ({
-  frontmatter: module.frontmatter,
-  file: path
-}));
-
-// Filter out projects without required fields
-const validProjects = projects.filter(p => 
-  p.frontmatter && 
-  p.frontmatter.title && 
-  p.frontmatter.description
-);
+const allProjects = await getCollection('projects');
 
 // Separate real projects from the coming-soon placeholder
-const realProjects = validProjects.filter(p => 
-  !p.file?.includes('coming-soon.md')
-);
+const realProjects = allProjects.filter(p => p.slug !== 'coming-soon');
+const comingSoonProject = allProjects.find(p => p.slug === 'coming-soon');
 
-const comingSoonProject = validProjects.find(p => 
-  p.file?.includes('coming-soon.md')
-);
-
-// Only show coming-soon if there are no real projects
-const projectsToShow = realProjects.length > 0 ? realProjects : (comingSoonProject ? [comingSoonProject] : []);
+// Show coming-soon card if there are fewer than 2 real projects
+const projectsToShow = realProjects.length < 2 
+  ? [...realProjects, ...(comingSoonProject ? [comingSoonProject] : [])]
+  : realProjects;
 
 // Sort projects by order
 const sortedProjects = projectsToShow.sort((a, b) => {
-  const orderA = a.frontmatter?.order || 999;
-  const orderB = b.frontmatter?.order || 999;
+  const orderA = a.data.order || 999;
+  const orderB = b.data.order || 999;
   return orderA - orderB;
 });
 ---
@@ -56,8 +34,13 @@ const sortedProjects = projectsToShow.sort((a, b) => {
   </div>
   
   <div class="grid sm:grid-cols-2 gap-6">
-    {sortedProjects.map(p => (
-      <ProjectCard {...p.frontmatter} />
-    ))}
+    {sortedProjects.map(p => {
+      // Override title for coming-soon based on number of real projects
+      const cardData = p.slug === 'coming-soon' 
+        ? { ...p.data, title: realProjects.length > 0 ? "More Projects Coming Soon" : "Projects Coming Soon" }
+        : p.data;
+      
+      return <ProjectCard {...cardData} slug={p.slug} />;
+    })}
   </div>
 </Layout>

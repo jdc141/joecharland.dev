@@ -3,6 +3,10 @@ import Navbar from "./Navbar.astro";
 import Footer from "./Footer.astro";
 import "../styles/global.css";
 
+interface Props {
+  title?: string;
+}
+
 const { title = "Joe Charland - Software Engineer" } = Astro.props;
 ---
 

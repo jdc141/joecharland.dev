@@ -1,0 +1,94 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Layout from '../../components/Layout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  // Filter out coming-soon from having its own page
+  const realProjects = projects.filter(p => p.slug !== 'coming-soon');
+  
+  return realProjects.map(project => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+const { title, description, image, tech = [], github, demo, inProgress, deployed } = project.data;
+---
+
+<Layout title={`${title} - Joe Charland`}>
+  <div class="max-w-4xl mx-auto">
+    <!-- Back button -->
+    <a href="/projects" class="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6 transition">
+      <i class="fas fa-arrow-left mr-2"></i>
+      Back to Projects
+    </a>
+
+    <!-- Project header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <h1 class="text-3xl md:text-4xl font-bold">{title}</h1>
+        {inProgress && (
+          <span class="bg-blue-500/20 text-blue-300 text-sm px-3 py-1 rounded-full font-medium border border-blue-500/30">
+            🚧 Building
+          </span>
+        )}
+      </div>
+      <p class="text-xl text-gray-300 mb-6">{description}</p>
+
+      <!-- Links -->
+      <div class="flex gap-4 text-lg mb-6">
+        {github && (
+          <a 
+            href={github} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg transition border border-gray-700 hover:border-blue-500"
+            aria-label={`View ${title} on GitHub`}>
+            <i class="fab fa-github"></i>
+            <span>View on GitHub</span>
+          </a>
+        )}
+        {deployed && demo && (
+          <a 
+            href={demo} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg transition"
+            aria-label={`View ${title} live`}>
+            <i class="fas fa-external-link-alt"></i>
+            <span>View Live Project</span>
+          </a>
+        )}
+      </div>
+
+      <!-- Tech stack -->
+      {tech.length > 0 && (
+        <div class="flex flex-wrap gap-2">
+          {tech.map(t => (
+            <span class="bg-gray-700/70 text-blue-300 text-sm px-3 py-1 rounded-full font-medium">
+              {t}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <!-- Project image -->
+    {image && (
+      <img 
+        src={image} 
+        alt={title} 
+        class="w-full rounded-lg mb-8 border border-gray-700"
+        loading="lazy"
+      />
+    )}
+
+    <!-- Markdown content -->
+    <div class="prose prose-invert prose-blue max-w-none">
+      <Content />
+    </div>
+  </div>
+</Layout>
