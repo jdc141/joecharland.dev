@@ -4,7 +4,7 @@ description: "A fast-paced browser strategy game that combines tower offense wit
 image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&h=600&fit=crop"
 tech: ["Phaser.js", "TypeScript", "WebSockets", "Node.js"]
 order: 1
-# inProgress: true
+inProgress: true
 demo: [true, "https://3siege.joecharland.dev"]
 deployed: true
 github: [true, "https://github.com/jdc141/3Siege"]
