@@ -2,13 +2,15 @@
 title: "3Siege"
 description: "A fast-paced browser strategy game that combines tower offense with capture-the-flag mechanics."
 image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&h=600&fit=crop"
-tech: ["HTML5 Canvas", "TypeScript", "WebSockets", "Node.js"]
+tech: ["Phaser.js", "TypeScript", "WebSockets", "Node.js"]
 order: 1
-inProgress: true
-deployed: false
+# inProgress: true
+demo: [true, "https://3siege.joecharland.dev"]
+deployed: true
+github: [true, "https://github.com/jdc141/3Siege"]
 ---
 
-3Siege is a real-time strategy game inspired by Clash Royale meets Capture the Flag. Deploy units, destroy towers, and escort flags back to your base to score. Quick 3-5 minute matches with tactical depth.
+Clash Royale meets Capture the Flag — destroying towers is only half the battle. Escort the flag home to claim victory, or steal it to build your own defenses.
 
 ## Gameplay
 
