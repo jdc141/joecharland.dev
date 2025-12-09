@@ -83,7 +83,7 @@ html {
    ============================================ */
 
 /* Arrow wave animation */
-@keyframes arrow-wave {
+@keyframes arrow-wave-right {
   0%, 100% {
     transform: translateX(0px);
   }
@@ -92,13 +92,28 @@ html {
   }
 }
 
-.arrow-wave {
-  animation: arrow-wave 2s ease-in-out infinite;
+@keyframes arrow-wave-left {
+  0%, 100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(-4px);
+  }
 }
 
-a:hover .arrow-wave,
-.group:hover .arrow-wave {
-  animation: arrow-wave 1s ease-in-out infinite;
+.arrow-wave {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+a:hover .arrow-wave[class*="arrow-right"],
+.group:hover .arrow-wave[class*="arrow-right"] {
+  animation: arrow-wave-right 1s ease-in-out infinite;
+}
+
+a:hover .arrow-wave[class*="arrow-left"],
+.group:hover .arrow-wave[class*="arrow-left"] {
+  animation: arrow-wave-left 1s ease-in-out infinite;
 }
 
 /* Fade in animation */
@@ -135,30 +150,49 @@ a:hover .arrow-wave,
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* Button pulse with glow */
+/* Button pulse with subtle scale */
 @keyframes button-pulse {
   0%, 100% {
-    opacity: 0;
     transform: scale(1);
   }
   50% {
-    opacity: 0.3;
-    transform: scale(1.05);
+    transform: scale(1.02);
   }
 }
 
 .btn-pulse {
   position: relative;
+  animation: button-pulse 3s ease-in-out infinite;
+  display: inline-block;
 }
 
-.btn-pulse::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 0.5rem;
-  background: rgb(37 99 235);
-  opacity: 0;
-  animation: button-pulse 2s ease-in-out infinite;
+/* Button letter bounce animation */
+.btn-text {
+  display: inline-block;
+}
+
+.btn-text .letter {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.btn-text .letter-space {
+  display: inline-block;
+  width: 0.25em;
+}
+
+a:hover .btn-text .letter {
+  animation: letter-bounce 4s ease-in-out infinite;
+  animation-delay: calc(var(--index) * 0.1s);
+}
+
+@keyframes letter-bounce {
+  0%, 10%, 100% {
+    transform: translateY(0);
+  }
+  5% {
+    transform: translateY(-4px);
+  }
 }
 
 /* Name highlight effect */
@@ -174,6 +208,25 @@ a:hover .arrow-wave,
   transform: scale(1.05);
 }
 
+.name-text {
+  display: inline-block;
+}
+
+.name-text .letter {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.name-text .letter-space {
+  display: inline-block;
+  width: 0.25em;
+}
+
+.name-highlight:hover .name-text .letter {
+  animation: letter-bounce 4s ease-in-out infinite;
+  animation-delay: calc(var(--index) * 0.1s);
+}
+
 /* Easter egg hover effect */
 .easter-egg {
   opacity: 0.3;
@@ -183,4 +236,181 @@ a:hover .arrow-wave,
 .easter-egg:hover {
   opacity: 1;
   transform: scale(1.2) rotate(10deg);
+}
+
+/* Nav logo shimmer-underline lift */
+.nav-logo {
+  position: relative;
+  display: inline-block;
+  color: white;
+  transition: color 0.25s ease, transform 0.25s ease;
+  background-size: 300% 100%;
+}
+
+.nav-logo::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 2px;
+  background: linear-gradient(90deg, #f8fafc, #93c5fd, #1e3a8a, #f8fafc);
+  background-size: 300% 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease, opacity 0.25s ease, background-position 0.6s ease;
+  opacity: 0;
+}
+
+.nav-logo:hover {
+  color: transparent;
+  transform: translateY(-1px) scale(1.02);
+  background-image: linear-gradient(90deg, #f8fafc, #93c5fd, #1e3a8a, #f8fafc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: logo-shimmer 2s linear infinite;
+}
+
+.nav-logo:hover::after {
+  transform: scaleX(1);
+  opacity: 1;
+  animation: logo-shimmer 2s linear infinite;
+}
+
+@keyframes logo-shimmer {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Pop-out animation - reusable */
+@keyframes pop-out {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+/* Only apply pop-out animation on desktop */
+@media (min-width: 768px) {
+  .nav-pop {
+    display: inline-block;
+  }
+  
+  .nav-pop:hover {
+    animation: pop-out 0.4s ease-in-out;
+    transform-origin: center;
+  }
+}
+
+/* ============================================
+   BUTTON STYLES
+   ============================================ */
+
+/* Secondary button - Blue border with glow effect */
+.btn-secondary {
+  position: relative;
+  border: 1px solid rgb(37 99 235);
+  background: transparent;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.btn-secondary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-secondary:hover::before {
+  left: 100%;
+}
+
+.btn-secondary:hover {
+  background: rgba(37, 99, 235, 0.1);
+  border-color: rgb(59, 130, 246);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(59, 130, 246, 0.1);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+}
+
+/* Ternary button - Gray border with animated gradient and glow */
+.btn-ternary {
+  position: relative;
+  border: 1px solid rgb(75 85 99);
+  background: transparent;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.btn-ternary::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 0.5rem;
+  background: linear-gradient(45deg, 
+    rgba(156, 163, 175, 0.3), 
+    rgba(107, 114, 128, 0.3), 
+    rgba(75, 85, 99, 0.3), 
+    rgba(107, 114, 128, 0.3), 
+    rgba(156, 163, 175, 0.3));
+  background-size: 300% 300%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.btn-ternary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, 
+    rgba(156, 163, 175, 0.15), 
+    rgba(107, 114, 128, 0.15));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.btn-ternary:hover {
+  border-color: rgb(156, 163, 175);
+  background: rgba(75, 85, 99, 0.25);
+  box-shadow: 
+    0 0 20px rgba(156, 163, 175, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.btn-ternary:hover::before {
+  opacity: 1;
+}
+
+.btn-ternary:hover::after {
+  opacity: 1;
+}
+
+.btn-ternary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(156, 163, 175, 0.3);
 }
