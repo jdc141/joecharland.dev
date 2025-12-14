@@ -6,6 +6,12 @@ tech: ["Next.js", "TypeScript", "PostgreSQL", "Tailwind.css"]
 order: 1
 inProgress: true
 demo: [true, "https://jotter.joecharland.dev"]
-deployed: false
+deployed: true
 github: [true, "https://github.com/jdc141/jotter"]
 ---
+
+A digit version of a bullet journal. Creating an application that I will use daily. This allows me to capture one line moments and track stats on different goals im interested.
+
+## Tech
+
+Currently building for the web. Leveraging Next.js, TypeScript, PostgreSQL, and Tailwind. 
