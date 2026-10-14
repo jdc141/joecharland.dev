@@ -37,9 +37,7 @@ resume/*.synctex.gz
 resume/*.fdb_latexmk
 resume/*.fls
 
-# Generated resume data (built from LaTeX source)
+# Generated resume data and PDF (built from LaTeX source)
 src/data/resume.json
-
-# Keep the PDF in public for downloads
-!public/*.pdf
+public/Resume_Joseph_Charland.pdf
 DEPLOY.md

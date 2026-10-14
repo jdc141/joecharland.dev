@@ -36,7 +36,7 @@ npm run build
 # Preview production build
 npm run preview
 
-# Update resume from LaTeX source
+# Rebuild resume data + PDF from LaTeX source
 npm run resume:sync
 ```
 
@@ -60,11 +60,14 @@ Optional detailed description here.
 
 ### Updating Resume
 
-**After editing in Overleaf:**
-1. Download the compiled PDF → save to Downloads folder
-2. Download the `.tex` source → replace `resume/resume.tex`
-3. Run `npm run resume:sync`
-4. Commit and push!
+`resume/resume.tex` is the single source of truth — the resume page and the downloadable PDF are both generated from it.
+
+1. Edit `resume/resume.tex`
+2. Commit and push!
+
+The deploy workflow compiles the PDF with [tectonic](https://tectonic-typesetting.github.io), so nothing else needs to be uploaded.
+
+**To preview locally** (optional): `brew install tectonic`, then `npm run resume:sync` builds `public/Resume_Joseph_Charland.pdf`. `npm run dev` does this automatically.
 
 ---
 
